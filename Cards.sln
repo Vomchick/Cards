@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cards.API", "Cards.API\Cards.API.csproj", "{42CE7628-7EF1-4C8C-90BE-1787DB4C481F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CardsAPI.Auth.Common", "CardsAPI.Auth.Common\CardsAPI.Auth.Common.csproj", "{0792D2E6-E7AA-4396-91F8-2ABC6F474455}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cards.Auth.Api", "Cards.Auth.Api\Cards.Auth.Api.csproj", "{BFADB640-37F3-40A3-AFF8-EADCE4AC28F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42CE7628-7EF1-4C8C-90BE-1787DB4C481F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42CE7628-7EF1-4C8C-90BE-1787DB4C481F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42CE7628-7EF1-4C8C-90BE-1787DB4C481F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42CE7628-7EF1-4C8C-90BE-1787DB4C481F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0792D2E6-E7AA-4396-91F8-2ABC6F474455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0792D2E6-E7AA-4396-91F8-2ABC6F474455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0792D2E6-E7AA-4396-91F8-2ABC6F474455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0792D2E6-E7AA-4396-91F8-2ABC6F474455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFADB640-37F3-40A3-AFF8-EADCE4AC28F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFADB640-37F3-40A3-AFF8-EADCE4AC28F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFADB640-37F3-40A3-AFF8-EADCE4AC28F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFADB640-37F3-40A3-AFF8-EADCE4AC28F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D896C63-FF0D-4F93-BBD9-037864882C12}
+	EndGlobalSection
+EndGlobal

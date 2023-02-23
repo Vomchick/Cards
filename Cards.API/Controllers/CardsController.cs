@@ -1,0 +1,70 @@
+﻿using Cards.API.Interfaces;
+using Cards.API.Interfaces.RepositoryChilds;
+using Cards.API.Models.ContextModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace Cards.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CardsController : Controller
+    {
+        private readonly ICardRepository _cardRep;
+        public CardsController(ICardRepository cardRep)
+        {
+            _cardRep = cardRep;
+        }
+
+        //Get all cards
+        [HttpGet]
+        public async Task<IActionResult> GetAllCards()
+        {
+            var cards = await _cardRep.GetAll();
+            return Ok(cards);
+        }
+
+        //Get one card
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetCard(Guid id)
+        {
+            var cards = await _cardRep.Get(id);
+            if (cards != null)
+                return Ok(cards);
+            else
+                return NotFound("Card not found");
+        }
+
+        //Create card
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddCard([FromBody] Card value)
+        {
+            value.Id = Guid.NewGuid();
+            await _cardRep.Post(value);
+            return CreatedAtAction(nameof(GetCard), new {id = value.Id}, value);
+        }
+
+        //Update card
+        [HttpPut]
+        [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateCard(Guid id, [FromBody] Card card)
+        {
+            await _cardRep.Put(id, card);
+            return Ok();
+        }
+
+        //Delete card
+        [HttpDelete]
+        [Route("{id:guid}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteCard(Guid id)
+        {
+            await _cardRep.Delete(id);
+            return Ok();
+        }
+    }
+}
