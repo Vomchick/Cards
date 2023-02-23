@@ -19,6 +19,7 @@ namespace Cards.API.Controllers
 
         //Get all cards
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllCards()
         {
             var cards = await _cardRep.GetAll();

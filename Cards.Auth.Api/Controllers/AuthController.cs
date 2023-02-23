@@ -1,6 +1,6 @@
-﻿using Cards.API.Interfaces.RepositoryChilds;
-using Cards.API.Models.ContextModels;
-using Cards.API.Models.ValidationModels;
+﻿using Cards.Auth.Api.Interfaces.RepositoryChilds;
+using Cards.Auth.Api.Models.ContextModels;
+using Cards.Auth.Api.Models.ValidationModels;
 using CardsAPI.Auth.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Cards.API.Controllers
+namespace Cards.Auth.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -53,7 +53,7 @@ namespace Cards.API.Controllers
             {
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim("Role", user.Role.ToString())
+                new Claim("role", user.Role.ToString())
             };
 
             var token = new JwtSecurityToken(authParams.Issuer,

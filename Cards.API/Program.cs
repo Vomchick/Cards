@@ -21,16 +21,12 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CardsDBConnectio
 
 //Inject Interfaces
 builder.Services.AddScoped<ICardRepository, CardRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-//Configuration setup (for JWT Auth)
 var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
-builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Auth"));
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.RequireHttpsMetadata = true;
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -45,6 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
         };
     });
+builder.Services.AddAuthorization();
 
 //Разрешили всем обращаться к нашему api?
 builder.Services.AddCors((setup) =>

@@ -1,8 +1,8 @@
-﻿using Cards.API.Interfaces.RepositoryChilds;
-using Cards.API.Models.ContextModels;
+﻿using Cards.Auth.Api.Interfaces.RepositoryChilds;
+using Cards.Auth.Api.Models.ContextModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cards.API.Data.Repositories
+namespace Cards.Auth.Api.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {

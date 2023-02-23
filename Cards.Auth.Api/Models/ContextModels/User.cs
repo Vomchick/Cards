@@ -1,9 +1,9 @@
-﻿using Cards.API.Enums;
+﻿using Cards.Auth.Api.Enums;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace Cards.API.Models.ContextModels
+namespace Cards.Auth.Api.Models.ContextModels
 {
     public class User
     {

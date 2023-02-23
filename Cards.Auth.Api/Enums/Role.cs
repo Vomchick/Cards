@@ -1,4 +1,4 @@
-﻿namespace Cards.API.Enums
+﻿namespace Cards.Auth.Api.Enums
 {
     public enum Role
     {

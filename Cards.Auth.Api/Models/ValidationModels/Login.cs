@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Cards.API.Models.ValidationModels
+namespace Cards.Auth.Api.Models.ValidationModels
 {
     public class Login
     {

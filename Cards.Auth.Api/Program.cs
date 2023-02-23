@@ -1,3 +1,9 @@
+using Cards.Auth.Api.Data;
+using Cards.Auth.Api.Data.Repositories;
+using Cards.Auth.Api.Interfaces.RepositoryChilds;
+using CardsAPI.Auth.Common;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +13,24 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Inject DBContext
+builder.Services.AddDbContext<CardsDBContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("CardsDBConnectionString")));
+
+//Inject Interfaces
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+//Configuration setup (for JWT Auth)
+builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Auth"));
+
+builder.Services.AddCors((setup) =>
+{
+    setup.AddPolicy("default", (options) =>
+    {
+        options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -15,10 +39,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("default");
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

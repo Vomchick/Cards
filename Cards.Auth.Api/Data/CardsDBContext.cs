@@ -1,8 +1,8 @@
-﻿using Cards.API.Enums;
-using Cards.API.Models.ContextModels;
+﻿using Cards.Auth.Api.Enums;
+using Cards.Auth.Api.Models.ContextModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cards.API.Data
+namespace Cards.Auth.Api.Data
 {
     public class CardsDBContext : DbContext
     {
@@ -10,7 +10,6 @@ namespace Cards.API.Data
         {
         }
 
-        public DbSet<Card> Cards { get; set; }
         public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

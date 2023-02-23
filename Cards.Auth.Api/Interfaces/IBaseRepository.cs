@@ -1,4 +1,4 @@
-﻿namespace Cards.API.Interfaces
+﻿namespace Cards.Auth.Api.Interfaces
 {
     public interface IBaseRepository<T>
     {

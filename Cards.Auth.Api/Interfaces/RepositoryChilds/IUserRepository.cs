@@ -1,6 +1,6 @@
-﻿using Cards.API.Models.ContextModels;
+﻿using Cards.Auth.Api.Models.ContextModels;
 
-namespace Cards.API.Interfaces.RepositoryChilds
+namespace Cards.Auth.Api.Interfaces.RepositoryChilds
 {
     public interface IUserRepository : IBaseRepository<User>
     {
