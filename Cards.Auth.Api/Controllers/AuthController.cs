@@ -57,7 +57,7 @@ namespace Cards.Auth.Api.Controllers
             };
 
             var token = new JwtSecurityToken(authParams.Issuer,
-                authParams.Audiense,
+                authParams.Audience,
                 claims,
                 expires: DateTime.Now.AddSeconds(authParams.TokenLifetime),
                 signingCredentials: credential);

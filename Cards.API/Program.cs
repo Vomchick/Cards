@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = authOptions.Issuer,
 
             ValidateAudience = true,
-            ValidAudience = authOptions.Audiense,
+            ValidAudience = authOptions.Audience,
 
             ValidateLifetime = true,
 
