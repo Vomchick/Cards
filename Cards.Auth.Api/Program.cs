@@ -13,6 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpContextAccessor();
+
 //Inject DBContext
 builder.Services.AddDbContext<CardsDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("CardsDBConnectionString")));
@@ -27,7 +29,8 @@ builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
     {
-        options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+        options.AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        options.WithOrigins("http://localhost:4200");
     });
 });
 

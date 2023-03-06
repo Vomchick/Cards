@@ -4,6 +4,7 @@ using Cards.API.Interfaces.RepositoryChilds;
 using Cards.API.Models.ContextModels;
 using CardsAPI.Auth.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CardsDBConnectio
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 var authOptions = builder.Configuration.GetSection("Auth").Get<AuthOptions>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -48,9 +50,12 @@ builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
     {
-        options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+        options.AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        options.WithOrigins("http://localhost:4200");
     });
 });
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

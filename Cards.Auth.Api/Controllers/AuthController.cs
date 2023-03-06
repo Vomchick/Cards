@@ -2,8 +2,11 @@
 using Cards.Auth.Api.Models.ContextModels;
 using Cards.Auth.Api.Models.ValidationModels;
 using CardsAPI.Auth.Common;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +38,16 @@ namespace Cards.Auth.Api.Controllers
             { 
                 var token = GenerateJWT(user);
 
+                var options = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTime.Now.AddMinutes(60)
+                };
+
+                Response.Cookies.Append("token", token, options);
+               
                 return Ok(new {access_token = token});
                 //Generate JWT
             }
@@ -51,8 +64,8 @@ namespace Cards.Auth.Api.Controllers
 
             var claims = new List<Claim>()
             {
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName, user.UserName),
-                new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Name, user.UserName),
+                new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim("role", user.Role.ToString())
             };
 
