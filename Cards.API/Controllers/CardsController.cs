@@ -12,17 +12,27 @@ namespace Cards.API.Controllers
     public class CardsController : Controller
     {
         private readonly ICardRepository _cardRep;
-        public CardsController(ICardRepository cardRep)
+        private readonly ILogger<CardsController> _logger;
+        public CardsController(ICardRepository cardRep, ILogger<CardsController> logger)
         {
             _cardRep = cardRep;
+            _logger = logger;
         }
 
         //Get all cards
         [HttpGet]
         public async Task<IActionResult> GetAllCards()
         {
-            var cards = await _cardRep.GetAll();
-            return Ok(cards);
+            try
+            {
+                var cards = await _cardRep.GetAll();
+                return Ok(cards);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
 
         //Get one card
@@ -30,11 +40,19 @@ namespace Cards.API.Controllers
         [Route("{id:guid}")]
         public async Task<IActionResult> GetCard(Guid id)
         {
-            var cards = await _cardRep.Get(id);
-            if (cards != null)
-                return Ok(cards);
-            else
-                return NotFound("Card not found");
+            try
+            {
+                var cards = await _cardRep.Get(id);
+                if (cards != null)
+                    return Ok(cards);
+                else
+                    return NotFound("Card not found");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
 
         //Create card
@@ -42,9 +60,17 @@ namespace Cards.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCard([FromBody] Card value)
         {
-            value.Id = Guid.NewGuid();
-            await _cardRep.Post(value);
-            return CreatedAtAction(nameof(GetCard), new {id = value.Id}, value);
+            try
+            {
+                value.Id = Guid.NewGuid();
+                await _cardRep.Post(value);
+                return CreatedAtAction(nameof(GetCard), new { id = value.Id }, value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
 
         //Update card
@@ -53,8 +79,16 @@ namespace Cards.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCard(Guid id, [FromBody] Card card)
         {
-            await _cardRep.Put(id, card);
-            return Ok();
+            try
+            {
+                await _cardRep.Put(id, card);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
 
         //Delete card
@@ -63,8 +97,16 @@ namespace Cards.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCard(Guid id)
         {
-            await _cardRep.Delete(id);
-            return Ok();
+            try
+            {
+                await _cardRep.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return StatusCode(500);
+            }
         }
     }
 }

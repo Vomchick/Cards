@@ -21,38 +21,47 @@ namespace Cards.Auth.Api.Controllers
     {
         private readonly IOptions<AuthOptions> authOptions;
         private readonly IUserRepository userRepository;
+        private readonly ILogger<AuthController> logger;
 
-        public AuthController(IOptions<AuthOptions> authOptions, IUserRepository userRepository)
+        public AuthController(IOptions<AuthOptions> authOptions, IUserRepository userRepository, ILogger<AuthController> logger)
         {
             this.authOptions = authOptions;
             this.userRepository = userRepository;
+            this.logger = logger;
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] Login request)
         {
-            var user = await userRepository.Authenticate(request.UserName, request.Password);
+            try
+            {
+                var user = await userRepository.Authenticate(request.UserName, request.Password);
 
-            if (user != null) 
-            { 
-                var token = GenerateJWT(user);
-
-                var options = new CookieOptions
+                if (user != null)
                 {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.None,
-                    Expires = DateTime.Now.AddMinutes(60)
-                };
+                    var token = GenerateJWT(user);
 
-                Response.Cookies.Append("token", token, options);
-               
-                return Ok(new {access_token = token});
-                //Generate JWT
+                    //var options = new CookieOptions
+                    //{
+                    //    HttpOnly = true,
+                    //    Secure = true,
+                    //    SameSite = SameSiteMode.None,
+                    //    Expires = DateTime.Now.AddMinutes(60)
+                    //};
+
+                    //Response.Cookies.Append("token", token, options);
+
+                    return Ok(new { access_token = token });
+                    //Generate JWT
+                }
+                return Unauthorized();
             }
-
-            return Unauthorized();
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return Unauthorized();
+            }
         }
 
         private string GenerateJWT(User user)
