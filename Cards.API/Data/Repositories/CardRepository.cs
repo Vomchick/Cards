@@ -10,97 +10,58 @@ namespace Cards.API.Data.Repositories
     { 
         private readonly CardsDBContext context;
         private readonly IMemoryCache cache;
-        private readonly ILogger<CardRepository> logger;
 
-        public CardRepository(CardsDBContext dbContext, IMemoryCache cache, ILogger<CardRepository> logger)
+        public CardRepository(CardsDBContext dbContext, IMemoryCache cache)
         {
             context = dbContext;
             this.cache = cache;
-            this.logger = logger;
         }
 
         public async Task Delete(Guid id)
         {
-            try
+            var found = await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            if (found != null)
             {
-                var found = await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
-                if (found != null)
-                {
-                    context.Cards.Remove(found);
-                    await context.SaveChangesAsync().ConfigureAwait(false);
-                    cache.Remove("AllCards");
-                }
-            }
-            catch(Exception ex)
-            {
-                logger.LogError(ex.Message);
+                context.Cards.Remove(found);
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                cache.Remove("AllCards");
             }
         }
 
         public async Task<Card> Get(Guid id)
         {
-            try
-            {
-                return await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return null;
-            }
+             return await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
         }
         public async Task<IEnumerable<Card>> GetAll()
         {
-            try
+            cache.TryGetValue("AllCards", out List<Card> cards);
+            if (cards?.Count == 0 || cards == null)
             {
-                cache.TryGetValue("AllCards", out List<Card> cards);
-                if (cards?.Count == 0 || cards == null)
-                {
-                    cards = await context.Cards.ToListAsync().ConfigureAwait(false);
-                    cache.Set("AllCards", cards, new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
-                }
-                return cards;
+                cards = await context.Cards.ToListAsync().ConfigureAwait(false);
+                cache.Set("AllCards", cards, new MemoryCacheEntryOptions() { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1) });
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-                return null;
-            }
+            return cards;
         }
 
         public async Task Post(Card value)
         {
-            try
-            {
-                await context.Cards.AddAsync(value).ConfigureAwait(false);
-                await context.SaveChangesAsync().ConfigureAwait(false);
-                cache.Remove("AllCard");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
-            }
+            await context.Cards.AddAsync(value).ConfigureAwait(false);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            cache.Remove("AllCard");
         }
 
         public async Task Put(Guid id, Card value)
         {
-            try
+            var found = await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
+            if (found != null)
             {
-                var found = await context.Cards.FirstOrDefaultAsync(x => x.Id == id).ConfigureAwait(false);
-                if (found != null)
-                {
-                    found.ExpiryMonth = value.ExpiryMonth;
-                    found.ExpiryYear = value.ExpiryYear;
-                    found.CardNumber = value.CardNumber;
-                    found.CardholderName = value.CardholderName;
-                    found.CVC = value.CVC;
-                    await context.SaveChangesAsync().ConfigureAwait(false);
-                    cache.Remove("AllCards");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex.Message);
+                found.ExpiryMonth = value.ExpiryMonth;
+                found.ExpiryYear = value.ExpiryYear;
+                found.CardNumber = value.CardNumber;
+                found.CardholderName = value.CardholderName;
+                found.CVC = value.CVC;
+                await context.SaveChangesAsync().ConfigureAwait(false);
+                cache.Remove("AllCards");
             }
         }
     }
